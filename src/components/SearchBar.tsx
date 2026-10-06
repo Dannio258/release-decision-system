@@ -7,7 +7,7 @@ function SearchBar({ className, ...props }: SeachBarProps) {
     <>
       <input
         type="text"
-        className={`${className} rounded-xl border px-4 py-2 outline-none`}
+        className={`${className} rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500`}
         {...props}
         placeholder="Search by ID"
       />
