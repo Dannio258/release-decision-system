@@ -3,6 +3,7 @@ import SearchBar from "../components/SearchBar";
 import TicketCard from "../components/Ticket";
 import { useState } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
+import ReleaseAnalysis from "../components/ReleaseAnalysis";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -14,7 +15,7 @@ function App() {
       : tickets.filter((ticket) => ticket.id === Number(inputValue));
 
   return (
-    <div className="grid min-h-dvh w-full grid-cols-1 gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-[360px_1fr]">
+    <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
       <div className="flex min-h-0 flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
         <SearchBar
           value={inputValue}
@@ -37,7 +38,6 @@ function App() {
                       current?.id === ticket.id ? null : ticket,
                     );
                     setInputValue("");
-
                   }}
                 />
               ))
@@ -54,14 +54,17 @@ function App() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6">
-        {selectedTicket ? (
-          <DetailedTicketCard ticket={selectedTicket} />
-        ) : (
-          <p className="grid h-full min-h-64 place-items-center text-slate-500">
-            Select a ticket to see its details
-          </p>
-        )}
+      <div className=" flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6">
+        <div>
+          {selectedTicket ? (
+            <DetailedTicketCard ticket={selectedTicket} />
+          ) : (
+            <p className="grid h-full min-h-64 place-items-center text-slate-500">
+              Select a ticket to see its details
+            </p>
+          )}
+        </div>
+        <ReleaseAnalysis onClick={(decision) => alert(decision)} />
       </div>
     </div>
   );
