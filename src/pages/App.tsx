@@ -1,18 +1,35 @@
-import tickets, { type Ticket } from "../../data/tickets";
+import initialTickets, { type Ticket } from "../../data/tickets";
 import SearchBar from "../components/SearchBar";
 import TicketCard from "../components/Ticket";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
 import ReleaseAnalysis from "../components/ReleaseAnalysis";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+  const [tickets, setTickets] = useState<Ticket[]>(() => {
+    const saved = localStorage.getItem("tickets");
+    return saved ? JSON.parse(saved) : initialTickets;
+  });
+
+  const selectedTicket = tickets.find(
+    (ticket) => ticket.id === selectedTicketId,
+  );
 
   const filteredTickets =
     inputValue.trim() === ""
       ? tickets
       : tickets.filter((ticket) => ticket.id === Number(inputValue));
+
+  const deleteTicket = (id: number) => {
+    setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
+    setSelectedTicketId(null);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("tickets", JSON.stringify(tickets));
+  }, [tickets]);
 
   return (
     <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
@@ -34,8 +51,8 @@ function App() {
                   key={ticket.id}
                   ticket={ticket}
                   onClick={() => {
-                    setSelectedTicket((current) =>
-                      current?.id === ticket.id ? null : ticket,
+                    setSelectedTicketId((current) =>
+                      current === ticket.id ? null : ticket.id,
                     );
                     setInputValue("");
                   }}
@@ -54,17 +71,24 @@ function App() {
         </div>
       </div>
 
-      <div className=" flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6">
+      <div className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6">
         <div>
           {selectedTicket ? (
-            <DetailedTicketCard ticket={selectedTicket} />
+            <DetailedTicketCard
+              onDelete={() => deleteTicket(selectedTicket.id)}
+              onEdit={() => alert("clicked")}
+              ticket={selectedTicket}
+            />
           ) : (
             <p className="grid h-full min-h-64 place-items-center text-slate-500">
               Select a ticket to see its details
             </p>
           )}
         </div>
-        <ReleaseAnalysis onClick={(decision) => alert(decision)} />
+        <ReleaseAnalysis
+          tickets={tickets}
+          onClick={(decision) => alert(decision)}
+        />
       </div>
     </div>
   );

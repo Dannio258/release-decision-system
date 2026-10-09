@@ -1,13 +1,14 @@
+import type { Ticket } from "../../data/tickets";
 import releaseDecision, {
   getTicketStatistics,
 } from "../../logic/releaseAnalysis";
-import tickets from "../../data/tickets";
 
 type AnalysisProps = {
   onClick: (decision: string) => void;
+  tickets: Ticket[];
 };
 
-function ReleaseAnalysis({ onClick }: AnalysisProps) {
+function ReleaseAnalysis({ onClick, tickets }: AnalysisProps) {
   const stats = getTicketStatistics(tickets);
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8">
@@ -33,13 +34,14 @@ function ReleaseAnalysis({ onClick }: AnalysisProps) {
           {stats.activeHours}
         </span>
       </p>
-
-      <div
-        onClick={() => onClick(releaseDecision(tickets))}
-        className="cursor-pointer rounded-xl border border-blue-500/30 bg-blue-500/10 px-4 py-4 text-center text-lg font-semibold tracking-wide text-blue-400 transition hover:border-blue-400 hover:bg-blue-500/20 hover:text-blue-300"
-      >
-        {releaseDecision(tickets)}
-      </div>
+      {stats.total > 0 && (
+        <div
+          onClick={() => onClick(releaseDecision(tickets))}
+          className={`cursor-pointer rounded-xl border border-blue-500/30 bg-blue-500/10 px-4 py-4 text-center text-lg font-semibold tracking-wide text-blue-400 transition hover:border-blue-400 hover:bg-blue-500/20 hover:text-blue-300`}
+        >
+          {releaseDecision(tickets)}
+        </div>
+      )}
     </div>
   );
 }

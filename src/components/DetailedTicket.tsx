@@ -2,9 +2,11 @@ import type { Ticket } from "../../data/tickets";
 
 type TicketProps = {
   ticket: Ticket;
+  onDelete: () => void;
+  onEdit: () => void;
 };
 
-function DetailedTicketCard({ ticket }: TicketProps) {
+function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   return (
     <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8">
       <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
@@ -65,6 +67,14 @@ function DetailedTicketCard({ ticket }: TicketProps) {
       >
         Severity: {ticket.severity}
       </p>
+
+      <button
+        onClick={onDelete}
+        className="rounded-xl bg-red-500 p-4 opacity-70"
+      >
+        Delete Ticket
+      </button>
+      <button onClick={onEdit} className="rounded-xl bg-yellow-600 p-4 opacity-70">Edit</button>
     </div>
   );
 }
