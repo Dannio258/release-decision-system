@@ -1,9 +1,11 @@
 import initialTickets, { type Ticket } from "../../data/tickets";
 import SearchBar from "../components/SearchBar";
+import Button from "../components/Button";
 import TicketCard from "../components/Ticket";
 import { useState, useEffect } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
 import ReleaseAnalysis from "../components/ReleaseAnalysis";
+import AddTicketForm from "../components/AddTicketForm";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -33,12 +35,14 @@ function App() {
 
   return (
     <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
+      <AddTicketForm/>
       <div className="flex min-h-0 flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
         <SearchBar
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
 
+        <Button>Add ticket</Button>
         <div className="flex min-h-0 flex-1 flex-col gap-3">
           <h1 className="text-left text-xl font-semibold tracking-tight">
             Tickets
