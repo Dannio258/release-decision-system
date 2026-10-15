@@ -70,7 +70,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
 
       <button
         onClick={onDelete}
-        className="rounded-xl bg-red-500 p-4 opacity-70"
+        className="rounded-xl bg-red-500 hover:bg-red-400 cursor-pointer p-4 opacity-70"
       >
         Delete Ticket
       </button>

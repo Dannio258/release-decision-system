@@ -15,6 +15,8 @@ function App() {
     return saved ? JSON.parse(saved) : initialTickets;
   });
 
+  const [addForm, setAddForm] = useState(false);
+
   const selectedTicket = tickets.find(
     (ticket) => ticket.id === selectedTicketId,
   );
@@ -33,16 +35,30 @@ function App() {
     localStorage.setItem("tickets", JSON.stringify(tickets));
   }, [tickets]);
 
+  const handleAddTicket = (newTicket: Ticket) => {
+    setTickets((prevTickets) => [...prevTickets, newTicket]);
+  };
+
+  const newId = Math.max(0, ...tickets.map((ticket) => ticket.id)) + 1;
+
   return (
     <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
-      <AddTicketForm/>
+      {addForm && (
+        <AddTicketForm newId={newId}
+          onClose={() => setAddForm(false)}
+          onAddTicket={(newTicket) => {
+            handleAddTicket(newTicket);
+            setAddForm(false);
+          }}
+        />
+      )}
       <div className="flex min-h-0 flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
         <SearchBar
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
 
-        <Button>Add ticket</Button>
+        <Button onClick={() => setAddForm(true)}>Add ticket</Button>
         <div className="flex min-h-0 flex-1 flex-col gap-3">
           <h1 className="text-left text-xl font-semibold tracking-tight">
             Tickets
@@ -51,7 +67,7 @@ function App() {
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto rounded-xl">
             {filteredTickets.length > 0 ? (
               filteredTickets.map((ticket) => (
-                <TicketCard
+                <TicketCard onDelete={() => deleteTicket(ticket.id)}
                   key={ticket.id}
                   ticket={ticket}
                   onClick={() => {

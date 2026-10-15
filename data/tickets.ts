@@ -1,5 +1,5 @@
-type TicketStatus = "open" | "testing" | "done";
-type Severity = 1 | 2 | 3 | 4 | 5;
+export type TicketStatus = "open" | "testing" | "done";
+export type Severity = 1 | 2 | 3 | 4 | 5;
 
 export type Ticket = {
   id: number;
