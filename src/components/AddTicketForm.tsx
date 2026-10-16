@@ -7,6 +7,8 @@ type AddTicketFormProps = {
 };
 
 function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
+  const capitalize = (str:string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
   const inputRadioStyle =
     "cursor-pointer rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-blue-500/50 has-checked:border-blue-500 has-checked:bg-blue-500/10 has-checked:text-blue-400";
 
@@ -14,14 +16,14 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    const title = data.title.toString();
+    const title = capitalize(data.title.toString());
     const status = data.status.toString() as TicketStatus;
     const severity = Number(data.severity) as Severity;
     const remainingHours = Number(data.remainingHours);
     const customerVip = data.customerVip === "true";
     const blocked = data.blocked === "true";
-    const owner = data.owner.toString() || null;
-    //const newId = Math.max(0, ...tickets.map((ticket) => ticket.id)) + 1;
+    const owner =  capitalize(data.owner.toString())  || null;
+
 
     const newTicket: Ticket = {
       id: newId,

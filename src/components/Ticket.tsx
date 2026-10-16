@@ -21,7 +21,7 @@ function TicketCard({ ticket, onClick, onDelete }: TicketProps) {
           e.stopPropagation();
           onDelete();
         }}
-        className="ml-auto cursor-pointer rounded-xl bg-red-500 p-4 opacity-70 hover:bg-red-400"
+        className="ml-auto cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700 text-xs"
       >
         Delete
       </button>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Ticket } from "../../data/tickets";
 
 type TicketProps = {
@@ -7,10 +8,17 @@ type TicketProps = {
 };
 
 function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
+  const [isEditing, setIsEditing] = useState(false);
   return (
     <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8">
       <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
-        ID: <span className="font-semibold text-slate-100">{ticket.id}</span>
+        ID:{" "}
+        <input
+          className={`${isEditing ? "rounded border border-blue-500 bg-slate-700" : "border-none bg-transparent outline-none"} p-2 `}
+          type="text"
+          value={ticket.id}
+          readOnly={!isEditing}
+        />
       </p>
 
       <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
@@ -68,13 +76,43 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
         Severity: {ticket.severity}
       </p>
 
-      <button
-        onClick={onDelete}
-        className="rounded-xl bg-red-500 hover:bg-red-400 cursor-pointer p-4 opacity-70"
-      >
-        Delete Ticket
-      </button>
-      <button onClick={onEdit} className="rounded-xl bg-yellow-600 p-4 opacity-70">Edit</button>
+      {isEditing ? (
+        <>
+          <button
+            onClick={() => {
+              setIsEditing(false);
+            }}
+            className="cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+            className="cursor-pointer rounded-xl bg-green-600 p-4 opacity-70 hover:bg-green-700"
+          >
+            Save edit
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            onClick={onDelete}
+            className="cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700"
+          >
+            Delete Ticket
+          </button>
+          <button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+            className="cursor-pointer rounded-xl bg-yellow-600 p-4 opacity-70 hover:bg-amber-500"
+          >
+            Edit
+          </button>
+        </>
+      )}
     </div>
   );
 }

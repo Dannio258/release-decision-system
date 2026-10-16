@@ -39,6 +39,10 @@ function App() {
     setTickets((prevTickets) => [...prevTickets, newTicket]);
   };
 
+  const handleEditTicket = (updatedTicket : Ticket) => {
+    setTickets((prevTickets) => prevTickets.map(ticket => ticket.id === updatedTicket.id ? updatedTicket : ticket ))
+  }
+
   const newId = Math.max(0, ...tickets.map((ticket) => ticket.id)) + 1;
 
   return (
