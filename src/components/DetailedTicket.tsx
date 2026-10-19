@@ -4,77 +4,244 @@ import type { Ticket } from "../../data/tickets";
 type TicketProps = {
   ticket: Ticket;
   onDelete: () => void;
-  onEdit: () => void;
+  onEdit: (ticket: Ticket) => void;
 };
 
 function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [updatedTicket, setUpdatedTicket] = useState<Ticket>({ ...ticket });
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
+  const inputRadioStyle =
+    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-center text-sm font-medium text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)]";
+
   return (
     <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8">
-      <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
-        ID:{" "}
+      <p className="rounded-xl bg-slate-800 p-6 font-medium text-slate-300">
+        ID: {ticket.id}
+      </p>
+
+      <p className="rounded-xl bg-slate-800 px-6 py-4 font-medium text-slate-300">
+        Title:{" "}
         <input
-          className={`${isEditing ? "rounded border border-blue-500 bg-slate-700" : "border-none bg-transparent outline-none"} p-2 `}
+          required
+          className={`${isEditing ? "rounded border border-blue-500 bg-slate-700" : "border-none bg-transparent outline-none"} p-2`}
           type="text"
-          value={ticket.id}
+          value={
+            !isEditing
+              ? capitalize(ticket.title)
+              : capitalize(updatedTicket.title)
+          }
+          onChange={(e) =>
+            setUpdatedTicket((updatedTicket) => ({
+              ...updatedTicket,
+              title: e.target.value,
+            }))
+          }
           readOnly={!isEditing}
         />
       </p>
 
-      <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
-        Title:{" "}
-        <span className="font-semibold text-slate-100">{ticket.title}</span>
+      <p className="rounded-xl bg-slate-800 px-6 py-4 font-medium text-slate-300">
+        Owner:{" "}
+        <input
+          className={`${isEditing ? "rounded border border-blue-500 bg-slate-700" : "border-none bg-transparent outline-none"} p-2`}
+          type="text"
+          value={
+            !isEditing
+              ? capitalize(ticket.owner ?? "")
+              : capitalize(updatedTicket.owner ?? "")
+          }
+          onChange={(e) =>
+            setUpdatedTicket((updatedTicket) => ({
+              ...updatedTicket,
+              owner: e.target.value,
+            }))
+          }
+          placeholder="No owner"
+          readOnly={!isEditing}
+        />
       </p>
 
-      <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
-        {ticket.owner ? (
-          <>
-            Owner:{" "}
-            <span className="font-semibold text-slate-100">{ticket.owner}</span>
-          </>
-        ) : (
-          <span className="font-semibold text-slate-500">No Owner</span>
-        )}
-      </p>
+      {!isEditing ? (
+        <p
+          className={`rounded-xl bg-slate-800 p-6 font-semibold ${
+            ticket.blocked ? "text-red-400" : "text-emerald-400"
+          }`}
+        >
+          {ticket.blocked ? "Blocked : True" : "Blocked : False"}
+        </p>
+      ) : (
+        <div className="flex items-stretch justify-around gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">
+          <label className={`${inputRadioStyle} flex-1`}>
+            <input
+              required
+              checked={updatedTicket.blocked === true}
+              type="radio"
+              name="blocked"
+              value="true"
+              onChange={() =>
+                setUpdatedTicket((updatedTicket) => ({
+                  ...updatedTicket,
+                  blocked: true,
+                }))
+              }
+              className="sr-only"
+            />
+            Yes
+          </label>
+          <label className={`${inputRadioStyle} flex-1`}>
+            <input
+              required
+              checked={updatedTicket.blocked === false}
+              type="radio"
+              name="blocked"
+              value="false"
+              onChange={() =>
+                setUpdatedTicket((updatedTicket) => ({
+                  ...updatedTicket,
+                  blocked: false,
+                }))
+              }
+              className="sr-only"
+            />
+            No
+          </label>
+        </div>
+      )}
 
-      <p
-        className={`rounded-xl bg-slate-800 p-4 font-semibold ${
-          ticket.blocked ? "text-red-400" : "text-emerald-400"
-        }`}
-      >
-        {ticket.blocked ? `Blocked: True` : `Blocked: False`}
-      </p>
+      {!isEditing ? (
+        <p
+          className={`rounded-xl bg-slate-800 p-6 font-semibold ${
+            ticket.customerVip ? "text-amber-400" : "text-slate-300"
+          }`}
+        >
+          {ticket.customerVip ? "VIP Customer" : "Standard Customer"}
+        </p>
+      ) : (
+        <div className="flex items-stretch justify-around gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">
+          <label className={`${inputRadioStyle} flex-1`}>
+            <input
+              required
+              type="radio"
+              checked={updatedTicket.customerVip === true}
+              name="customerVip"
+              value="true"
+              onChange={() =>
+                setUpdatedTicket((updatedTicket) => ({
+                  ...updatedTicket,
+                  customerVip: true,
+                }))
+              }
+              className="sr-only"
+            />
+            Yes
+          </label>
+          <label className={`${inputRadioStyle} flex-1`}>
+            <input
+              required
+              type="radio"
+              checked={updatedTicket.customerVip === false}
+              name="customerVip"
+              value="false"
+              onChange={() =>
+                setUpdatedTicket((updatedTicket) => ({
+                  ...updatedTicket,
+                  customerVip: false,
+                }))
+              }
+              className="sr-only"
+            />
+            No
+          </label>
+        </div>
+      )}
 
-      <p
-        className={`rounded-xl bg-slate-800 p-4 font-semibold ${
-          ticket.customerVip ? "text-amber-400" : "text-slate-300"
-        }`}
-      >
-        {ticket.customerVip ? `VIP Customer` : `Standard Customer`}
-      </p>
-
-      <p className="rounded-xl bg-slate-800 p-4 font-medium text-slate-300">
+      <p className="rounded-xl bg-slate-800 px-6 py-4 font-medium text-slate-300">
         Remaining Hours:{" "}
-        <span className="font-semibold text-slate-100">
-          {ticket.remainingHours}
-        </span>
+        <input
+          required
+          className={`${isEditing ? "[appearance:textfield] rounded border border-blue-500 bg-slate-700 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" : "border-none bg-transparent outline-none"} p-2`}
+          type="number"
+          min={1}
+          onWheel={(e) => e.currentTarget.blur()}
+          value={
+            !isEditing ? ticket.remainingHours : updatedTicket.remainingHours
+          }
+          onChange={(e) =>
+            setUpdatedTicket((updatedTicket) => ({
+              ...updatedTicket,
+              remainingHours: Number(e.target.value),
+            }))
+          }
+          readOnly={!isEditing}
+        />
       </p>
 
-      <p className="rounded-xl bg-slate-800 p-4 font-semibold text-blue-400">
-        Status: {ticket.status.toUpperCase()}
-      </p>
+      {!isEditing ? (
+        <p className="rounded-xl bg-slate-800 p-6 font-semibold text-blue-400">
+          Status:{` ${ticket.status.toUpperCase()}`}
+        </p>
+      ) : (
+        <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
+          {(["open", "testing", "done"] as const).map((status) => (
+            <label key={status} className={inputRadioStyle}>
+              <input
+                required
+                checked={updatedTicket.status === status}
+                type="radio"
+                name="status"
+                value={status}
+                onChange={() =>
+                  setUpdatedTicket((updatedTicket) => ({
+                    ...updatedTicket,
+                    status: status,
+                  }))
+                }
+                className="sr-only place-self-center"
+              />
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </label>
+          ))}
+        </div>
+      )}
 
-      <p
-        className={`rounded-xl bg-slate-800 p-4 font-semibold ${
-          ticket.severity >= 5
-            ? "text-red-400"
-            : ticket.severity >= 3
-              ? "text-amber-400"
-              : "text-emerald-400"
-        }`}
-      >
-        Severity: {ticket.severity}
-      </p>
+      {!isEditing ? (
+        <p
+          className={`rounded-xl bg-slate-800 p-6 font-semibold ${
+            ticket.severity >= 5
+              ? "text-red-400"
+              : ticket.severity >= 3
+                ? "text-amber-400"
+                : "text-emerald-400"
+          }`}
+        >
+          Severity:{` ${ticket.severity}`}
+        </p>
+      ) : (
+        <div className="flex justify-around rounded-xl border border-slate-700 bg-slate-800 p-3">
+          {([1, 2, 3, 4, 5] as const).map((severity) => (
+            <label key={severity} className={inputRadioStyle}>
+              <input
+                required
+                checked={updatedTicket.severity === severity}
+                type="radio"
+                name="severity"
+                value={severity}
+                onChange={() =>
+                  setUpdatedTicket((updatedTicket) => ({
+                    ...updatedTicket,
+                    severity: severity,
+                  }))
+                }
+                className="sr-only place-self-center"
+              />
+              {severity}
+            </label>
+          ))}
+        </div>
+      )}
 
       {isEditing ? (
         <>
@@ -82,15 +249,18 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
             onClick={() => {
               setIsEditing(false);
             }}
-            className="cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700"
+            className="cursor-pointer rounded-xl border border-red-500/30 bg-red-500/10 p-4 font-semibold text-red-400 transition-all duration-200 hover:border-red-500/60 hover:bg-red-500/20 hover:text-red-300"
           >
             Cancel
           </button>
           <button
             onClick={() => {
-              setIsEditing(true);
+              {
+                onEdit(updatedTicket);
+                setIsEditing(false);
+              }
             }}
-            className="cursor-pointer rounded-xl bg-green-600 p-4 opacity-70 hover:bg-green-700"
+            className="cursor-pointer rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 font-semibold text-emerald-400 transition-all duration-200 hover:border-emerald-500/60 hover:bg-emerald-500/20 hover:text-emerald-300"
           >
             Save edit
           </button>
@@ -105,7 +275,10 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           </button>
           <button
             onClick={() => {
-              setIsEditing(true);
+              {
+                setIsEditing(true);
+                setUpdatedTicket({ ...ticket });
+              }
             }}
             className="cursor-pointer rounded-xl bg-yellow-600 p-4 opacity-70 hover:bg-amber-500"
           >

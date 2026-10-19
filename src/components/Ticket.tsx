@@ -1,4 +1,5 @@
 import type { Ticket } from "../../data/tickets";
+import DeleteBin from "./DeleteBin";
 
 type TicketProps = {
   ticket: Ticket;
@@ -21,9 +22,9 @@ function TicketCard({ ticket, onClick, onDelete }: TicketProps) {
           e.stopPropagation();
           onDelete();
         }}
-        className="ml-auto cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700 text-xs"
+        className="ml-auto cursor-pointer rounded-xl bg-red-600 px-3 text-xs opacity-70 hover:bg-red-700"
       >
-        Delete
+        <DeleteBin />
       </button>
     </div>
   );

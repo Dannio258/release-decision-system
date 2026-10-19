@@ -7,7 +7,8 @@ type AddTicketFormProps = {
 };
 
 function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
-  const capitalize = (str:string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   const inputRadioStyle =
     "cursor-pointer rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-blue-500/50 has-checked:border-blue-500 has-checked:bg-blue-500/10 has-checked:text-blue-400";
@@ -22,8 +23,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     const remainingHours = Number(data.remainingHours);
     const customerVip = data.customerVip === "true";
     const blocked = data.blocked === "true";
-    const owner =  capitalize(data.owner.toString())  || null;
-
+    const owner = capitalize(data.owner.toString()) || null;
 
     const newTicket: Ticket = {
       id: newId,
@@ -159,7 +159,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
           required
           name="remainingHours"
           type="number"
-          min={1} 
+          min={1}
           onWheel={(e) => e.currentTarget.blur()}
           className="[appearance:textfield] rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
@@ -200,6 +200,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
             <div className="flex justify-around">
               <label className={inputRadioStyle}>
                 <input
+                  required
                   type="radio"
                   name="blocked"
                   value="true"
@@ -209,6 +210,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
               </label>
               <label className={inputRadioStyle}>
                 <input
+                  required
                   type="radio"
                   name="blocked"
                   value="false"

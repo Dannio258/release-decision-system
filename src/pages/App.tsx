@@ -100,7 +100,7 @@ function App() {
           {selectedTicket ? (
             <DetailedTicketCard
               onDelete={() => deleteTicket(selectedTicket.id)}
-              onEdit={() => alert("clicked")}
+              onEdit={(updatedTicket) => handleEditTicket(updatedTicket)}
               ticket={selectedTicket}
             />
           ) : (
