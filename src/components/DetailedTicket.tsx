@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Ticket } from "../../data/tickets";
 
 type TicketProps = {
@@ -10,14 +10,37 @@ type TicketProps = {
 function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTicket, setUpdatedTicket] = useState<Ticket>({ ...ticket });
+  const editModeRef = useRef<HTMLDivElement>(null);
+
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   const inputRadioStyle =
-    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-center text-sm font-medium text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)]";
+    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-center text-sm font-medium text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] flex-1";
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        editModeRef.current &&
+        !editModeRef.current.contains(event.target)
+      ) {
+        setIsEditing(false);
+      }
+    };
+    if (isEditing) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditing]);
 
   return (
-    <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8">
+    <div
+      ref={editModeRef}
+      className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-left shadow-lg lg:p-8"
+    >
       <p className="rounded-xl bg-slate-800 p-6 font-medium text-slate-300">
         ID: {ticket.id}
       </p>
@@ -73,8 +96,8 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           {ticket.blocked ? "Blocked : True" : "Blocked : False"}
         </p>
       ) : (
-        <div className="flex items-stretch justify-around gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">
-          <label className={`${inputRadioStyle} flex-1`}>
+        <div className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">Blocked :
+          <label className={inputRadioStyle}> 
             <input
               required
               checked={updatedTicket.blocked === true}
@@ -91,7 +114,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
             />
             Yes
           </label>
-          <label className={`${inputRadioStyle} flex-1`}>
+          <label className={inputRadioStyle}>
             <input
               required
               checked={updatedTicket.blocked === false}
@@ -120,8 +143,8 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           {ticket.customerVip ? "VIP Customer" : "Standard Customer"}
         </p>
       ) : (
-        <div className="flex items-stretch justify-around gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">
-          <label className={`${inputRadioStyle} flex-1`}>
+        <div className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3">VIP :
+          <label className={inputRadioStyle}>
             <input
               required
               type="radio"
@@ -138,7 +161,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
             />
             Yes
           </label>
-          <label className={`${inputRadioStyle} flex-1`}>
+          <label className={inputRadioStyle}>
             <input
               required
               type="radio"
@@ -159,7 +182,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
       )}
 
       <p className="rounded-xl bg-slate-800 px-6 py-4 font-medium text-slate-300">
-        Remaining Hours:{" "}
+        Remaining Hours: {}
         <input
           required
           className={`${isEditing ? "[appearance:textfield] rounded border border-blue-500 bg-slate-700 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" : "border-none bg-transparent outline-none"} p-2`}
@@ -184,7 +207,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           Status:{` ${ticket.status.toUpperCase()}`}
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
+        <div className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">Status : 
           {(["open", "testing", "done"] as const).map((status) => (
             <label key={status} className={inputRadioStyle}>
               <input
@@ -220,7 +243,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           Severity:{` ${ticket.severity}`}
         </p>
       ) : (
-        <div className="flex justify-around rounded-xl border border-slate-700 bg-slate-800 p-3">
+        <div className="flex gap-2 items-center rounded-xl border border-slate-700 bg-slate-800 p-3">Severity :
           {([1, 2, 3, 4, 5] as const).map((severity) => (
             <label key={severity} className={inputRadioStyle}>
               <input

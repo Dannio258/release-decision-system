@@ -6,16 +6,18 @@ import { useState, useEffect } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
 import ReleaseAnalysis from "../components/ReleaseAnalysis";
 import AddTicketForm from "../components/AddTicketForm";
+import DeleteConfirmation from "../components/DeleteComfirmation";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+  const [addForm, setAddForm] = useState(false);
+  const [ticketToDelete, setTicketToDelete] = useState<number | null>(null);
+
   const [tickets, setTickets] = useState<Ticket[]>(() => {
     const saved = localStorage.getItem("tickets");
     return saved ? JSON.parse(saved) : initialTickets;
   });
-
-  const [addForm, setAddForm] = useState(false);
 
   const selectedTicket = tickets.find(
     (ticket) => ticket.id === selectedTicketId,
@@ -26,9 +28,9 @@ function App() {
       ? tickets
       : tickets.filter((ticket) => ticket.id === Number(inputValue));
 
-  const deleteTicket = (id: number) => {
+  const handleDeleteTicket = (id: number) => {
     setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
-    setSelectedTicketId(null);
+    setSelectedTicketId((current) => (current === id ? null : current));
   };
 
   useEffect(() => {
@@ -39,16 +41,21 @@ function App() {
     setTickets((prevTickets) => [...prevTickets, newTicket]);
   };
 
-  const handleEditTicket = (updatedTicket : Ticket) => {
-    setTickets((prevTickets) => prevTickets.map(ticket => ticket.id === updatedTicket.id ? updatedTicket : ticket ))
-  }
+  const handleEditTicket = (updatedTicket: Ticket) => {
+    setTickets((prevTickets) =>
+      prevTickets.map((ticket) =>
+        ticket.id === updatedTicket.id ? updatedTicket : ticket,
+      ),
+    );
+  };
 
   const newId = Math.max(0, ...tickets.map((ticket) => ticket.id)) + 1;
 
   return (
     <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
       {addForm && (
-        <AddTicketForm newId={newId}
+        <AddTicketForm
+          newId={newId}
           onClose={() => setAddForm(false)}
           onAddTicket={(newTicket) => {
             handleAddTicket(newTicket);
@@ -71,7 +78,10 @@ function App() {
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto rounded-xl">
             {filteredTickets.length > 0 ? (
               filteredTickets.map((ticket) => (
-                <TicketCard onDelete={() => deleteTicket(ticket.id)}
+                <TicketCard
+                  onDelete={() => {
+                    setTicketToDelete(ticket.id);
+                  }}
                   key={ticket.id}
                   ticket={ticket}
                   onClick={() => {
@@ -99,7 +109,9 @@ function App() {
         <div>
           {selectedTicket ? (
             <DetailedTicketCard
-              onDelete={() => deleteTicket(selectedTicket.id)}
+              onDelete={() => {
+                setTicketToDelete(selectedTicket.id);
+              }}
               onEdit={(updatedTicket) => handleEditTicket(updatedTicket)}
               ticket={selectedTicket}
             />
@@ -114,6 +126,15 @@ function App() {
           onClick={(decision) => alert(decision)}
         />
       </div>
+      {ticketToDelete !== null && (
+        <DeleteConfirmation
+          onConfirm={() => {
+            handleDeleteTicket(ticketToDelete);
+            setTicketToDelete(null);
+          }}
+          onCancel={() => setTicketToDelete(null)}
+        />
+      )}
     </div>
   );
 }
