@@ -1,12 +1,25 @@
 import type { Ticket, TicketStatus, Severity } from "../../data/tickets";
 import Button from "./Button";
+import {
+  ownerRegex,
+  titleRegex,
+  hoursRegex,
+} from "../../logic/ticketValidation.ts";
+import { useState } from "react";
+
 type AddTicketFormProps = {
   onClose: () => void;
   onAddTicket: (ticket: Ticket) => void;
   newId: number;
 };
+type EditableTicket = Omit<Ticket, "remainingHours"> & {
+  remainingHours: string;
+};
+
+
 
 function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
+  const [invalidSave, setInvalidSave] = useState(true);
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
@@ -20,12 +33,12 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     const title = capitalize(data.title.toString());
     const status = data.status.toString() as TicketStatus;
     const severity = Number(data.severity) as Severity;
-    const remainingHours = Number(data.remainingHours);
+    const remainingHours = data.remainingHours.toString();
     const customerVip = data.customerVip === "true";
     const blocked = data.blocked === "true";
     const owner = capitalize(data.owner.toString()) || null;
 
-    const newTicket: Ticket = {
+    const newTicket: EditableTicket = {
       id: newId,
       title: title,
       severity: severity,
@@ -35,7 +48,21 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
       customerVip: customerVip,
       blocked: blocked,
     };
-    onAddTicket(newTicket);
+
+    const isTitleInvalid = !titleRegex.test(newTicket.title);
+
+    const isOwnerInvalid =
+      newTicket.owner !== null && !ownerRegex.test(newTicket.owner.trim());
+
+    const isHoursInvalid = !hoursRegex.test(newTicket.remainingHours);
+
+    setInvalidSave(isTitleInvalid || isOwnerInvalid || isHoursInvalid);
+
+    if (!invalidSave) {
+      onAddTicket({ ...newTicket, remainingHours: Number(remainingHours) });
+    } else {
+      return "className={}";
+    }
   };
 
   return (
@@ -61,69 +88,25 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
           required
           name="title"
           type="text"
-          className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+          className={`${invalidSave ? "border-red-500" : "border-blue-500"} rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`}
         />
 
         <label className="mt-2 text-sm font-medium text-slate-300">
           Severity
         </label>
-        <div className="flex justify-around gap-2 rounded-xl border border-slate-700 bg-slate-950 p-3">
-          <div className="flex items-center gap-2">
-            <label className={inputRadioStyle}>
+        <div className="flex items-center gap-2">
+          {([1, 2, 3, 4, 5] as const).map((severity) => (
+            <label key={severity} className={`${inputRadioStyle} flex-1`}>
               <input
                 required
                 type="radio"
                 name="severity"
-                value={1}
+                value={severity}
                 className="sr-only"
               />
-              1
+              {severity}
             </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className={inputRadioStyle}>
-              <input
-                type="radio"
-                name="severity"
-                value={2}
-                className="sr-only"
-              />
-              2
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className={inputRadioStyle}>
-              <input
-                type="radio"
-                name="severity"
-                value={3}
-                className="sr-only"
-              />
-              3
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className={inputRadioStyle}>
-              <input
-                type="radio"
-                name="severity"
-                value={4}
-                className="sr-only"
-              />
-              4
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <label className={inputRadioStyle}>
-              <input
-                type="radio"
-                name="severity"
-                value={5}
-                className="sr-only"
-              />
-              5
-            </label>
-          </div>
+          ))}
         </div>
 
         <label className="mt-2 text-sm font-medium text-slate-300">
@@ -148,7 +131,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
         <input
           name="owner"
           type="text"
-          className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+          className={`${invalidSave ? "border-red-500" : "border-blue-500"} rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`}
           placeholder="May be empty"
         />
 
