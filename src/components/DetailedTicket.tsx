@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import type { Ticket } from "../../data/tickets";
-import {ownerRegex,titleRegex,hoursRegex} from "../../logic/ticketValidation.ts"
+import {
+  ownerRegex,
+  titleRegex,
+  hoursRegex,
+} from "../../logic/ticketValidation.ts";
 
 type TicketProps = {
   ticket: Ticket;
@@ -25,15 +29,14 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   const inputRadioStyle =
     "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-center text-sm font-medium text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] flex-1";
 
-  
   const isTitleInvalid = !titleRegex.test(updatedTicket.title);
-  
-  const isOwnerInvalid =
-  updatedTicket.owner !== null &&
-  !ownerRegex.test(updatedTicket.owner.trim());
-  
+
+  const owner = updatedTicket.owner?.trim() ?? "";
+
+  const isOwnerInvalid = owner !== "" && !ownerRegex.test(owner);
+
   const isHoursInvalid = !hoursRegex.test(updatedTicket.remainingHours);
-  
+
   const invalidSave = isTitleInvalid || isOwnerInvalid || isHoursInvalid;
 
   useEffect(() => {
@@ -306,15 +309,12 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
             disabled={invalidSave}
             onClick={() => {
               {
-                if (!invalidSave) {
-                  onEdit({
-                    ...updatedTicket,
-                    remainingHours: Number(updatedTicket.remainingHours),
-                  });
-                  setIsEditing(false);
-                } else {
-                  return;
-                }
+                onEdit({
+                  ...updatedTicket,
+                  owner: updatedTicket.owner?.trim() || null,
+                  remainingHours: Number(updatedTicket.remainingHours),
+                });
+                setIsEditing(false);
               }
             }}
             className={`cursor-pointer ${invalidSave && `pointer-events-none opacity-30`} rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 font-semibold text-emerald-400 transition-all duration-200 hover:border-emerald-500/60 hover:bg-emerald-500/20 hover:text-emerald-300`}
