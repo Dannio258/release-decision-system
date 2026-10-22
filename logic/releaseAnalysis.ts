@@ -1,74 +1,38 @@
 import { type Ticket } from "../data/tickets";
 
 const isReleaseBlocker = (ticket: Ticket) => {
-  if (
+  return (
     (ticket.blocked && ticket.severity >= 4) ||
     (ticket.severity === 5 && ticket.status === "open")
-  ) {
-    return true;
-  } else {
-    return false;
-  }
+  );
 };
 const isPriority = (ticket: Ticket) => {
-  if (ticket.customerVip && ticket.severity >= 3 && ticket.status !== "done") {
-    return true;
-  } else {
-    return false;
-  }
+  return ticket.customerVip && ticket.severity >= 3 && ticket.status !== "done";
 };
 const isUnassigned = (ticket: Ticket) => {
-  if (ticket.owner === null && ticket.status !== "done") {
-    return true;
-  } else {
-    return false;
-  }
+  return ticket.owner === null && ticket.status !== "done";
 };
 const isActive = (ticket: Ticket) => {
-  if (ticket.status !== "done") {
-    return true;
-  } else {
-    return false;
-  }
+  return ticket.status !== "done";
 };
 const isDone = (ticket: Ticket) => {
-  if (ticket.status === "done") {
-    return true;
-  } else {
-    return false;
-  }
+  return ticket.status === "done";
 };
 
-const classifyTicket = (ticket: Ticket) => {
-  if (isReleaseBlocker(ticket)) {
-    return "Release_Blocker";
-  }
-  if (isPriority(ticket)) {
-    return "Priority";
-  }
-  if (isUnassigned(ticket)) {
-    return "Unassigned";
-  }
-  if (isActive(ticket)) {
-    return "Active";
-  }
-  if (isDone(ticket)) {
-    return "Done";
-  }
-};
 const releaseDecision = (tickets: Ticket[]) => {
-  const classifiedTickets = tickets.map((ticket) => classifyTicket(ticket));
+  const releaseBlock = tickets.some((ticket) => isReleaseBlocker(ticket));
+  const review = tickets.some((ticket) => isUnassigned(ticket));
 
   let activeHours = 0;
   tickets.forEach((ticket) => {
     if (ticket.status !== "done") {
-      return activeHours += ticket.remainingHours;
+      activeHours += ticket.remainingHours;
     }
   });
 
-  if (classifiedTickets.includes("Release_Blocker")) {
+  if (releaseBlock) {
     return "Block";
-  } else if (classifiedTickets.includes("Unassigned") || activeHours > 35) {
+  } else if (review || activeHours > 35) {
     return "Review";
   } else {
     return "Release";
@@ -86,25 +50,23 @@ export const getTicketStatistics = (tickets: Ticket[]) => {
   };
 
   tickets.forEach((ticket) => {
-    const classification = classifyTicket(ticket);
-
-    if (classification === "Release_Blocker") {
+    if (isReleaseBlocker(ticket)) {
       statistics.releaseBlockers++;
     }
 
-    if (classification === "Priority") {
+    if (isPriority(ticket)) {
       statistics.priority++;
     }
 
-    if (classification === "Unassigned") {
+    if (isUnassigned(ticket)) {
       statistics.unassigned++;
     }
 
-    if (classification === "Active") {
+    if (isActive(ticket)) {
       statistics.active++;
     }
 
-    if (classification === "Done") {
+    if (isDone(ticket)) {
       statistics.done++;
     }
 
