@@ -2,22 +2,44 @@ import initialTickets, { type Ticket } from "../../data/tickets";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import TicketCard from "../components/Ticket";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
 import ReleaseAnalysis from "../components/ReleaseAnalysis";
 import AddTicketForm from "../components/AddTicketForm";
 import DeleteConfirmation from "../components/DeleteComfirmation";
+import ErrorNotification from "../components/ErrorNotification";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [addForm, setAddForm] = useState(false);
   const [ticketToDelete, setTicketToDelete] = useState<number | null>(null);
+  const [initialData] = useState<{
+    tickets: Ticket[];
+    error: string | null;
+  }>(() => {
+    try {
+      const saved = localStorage.getItem("tickets");
 
-  const [tickets, setTickets] = useState<Ticket[]>(() => {
-    const saved = localStorage.getItem("tickets");
-    return saved ? JSON.parse(saved) : initialTickets;
+      return {
+        tickets: saved ? JSON.parse(saved) : initialTickets,
+        error: null,
+      };
+    } catch (error) {
+      console.error(error);
+
+      return {
+        tickets: initialTickets,
+        error: "Failed to load tickets!",
+      };
+    }
   });
+
+  const [tickets, setTickets] = useState<Ticket[]>(initialData.tickets);
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(
+    initialData.error,
+  );
 
   const selectedTicket = tickets.find(
     (ticket) => ticket.id === selectedTicketId,
@@ -50,9 +72,14 @@ function App() {
   };
 
   const newId = Math.max(0, ...tickets.map((ticket) => ticket.id)) + 1;
-
+  const handleCloseError = useCallback(() => {
+    setErrorMessage(null);
+  }, []);
   return (
     <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
+      {errorMessage && (
+        <ErrorNotification message={errorMessage} onClose={handleCloseError} />
+      )}
       {addForm && (
         <AddTicketForm
           newId={newId}
