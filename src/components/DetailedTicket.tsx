@@ -27,7 +27,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   const inputRadioStyle =
-    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-2 py-3 text-center text-sm font-medium text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] min-w-0 flex-1 sm:px-4";
+    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-2 py-3  text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] min-w-0 flex-1 xl:px-5";
 
   const isTitleInvalid = !titleRegex.test(updatedTicket.title);
 
@@ -60,24 +60,19 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   return (
     <div
       ref={editModeRef}
-      className="grid w-full min-w-0 grid-cols-1 gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-3 text-left shadow-lg sm:grid-cols-2 sm:gap-4 sm:p-6 lg:p-8"
+      className="text-fluid-sm grid w-full grid-cols-1 gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg sm:grid-cols-2 sm:gap-4 sm:p-6 lg:p-8"
     >
-      <p className="min-w-0 rounded-xl bg-slate-800 p-4 font-medium text-slate-300 sm:p-6">
+      <p className="flex items-center rounded-xl bg-slate-800 p-4 font-medium sm:p-6">
         ID: {ticket.id}
       </p>
 
-      <p className="min-w-0 rounded-xl bg-slate-800 p-4 font-medium text-slate-300 sm:px-6 sm:py-4">
-        Title:{" "}
+      <p
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium sm:px-6 sm:py-4`}
+      >
+        Title
         <input
           required
-          className={`${isEditing ? `block w-full rounded border bg-slate-700 p-2 ${isTitleInvalid ? "border-red-500" : "border-blue-500"}` : "inline-block max-w-full border-none bg-transparent p-0 align-baseline"} min-w-0 outline-none`}
-          style={
-            !isEditing
-              ? {
-                  width: `${Math.max(capitalize(ticket.title).length + 2, 4)}ch`,
-                }
-              : undefined
-          }
+          className={`${isEditing ? `rounded border bg-slate-700 p-2 lg:w-full ${isTitleInvalid ? "border-red-500" : "border-blue-500"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
           type="text"
           value={
             !isEditing
@@ -94,17 +89,12 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
         />
       </p>
 
-      <p className="min-w-0 rounded-xl bg-slate-800 p-4 font-medium text-slate-300 sm:px-6 sm:py-4">
-        Owner:{" "}
+      <p
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium sm:px-6 sm:py-4`}
+      >
+        Owner
         <input
-          className={`${isEditing ? `block w-full rounded border bg-slate-700 p-2 ${isOwnerInvalid ? "border-red-500" : "border-blue-500"}` : "inline-block max-w-full border-none bg-transparent p-0 align-baseline"} min-w-0 outline-none`}
-          style={
-            !isEditing
-              ? {
-                  width: `${Math.max(capitalize(ticket.owner ?? "").length + 2, 10)}ch`,
-                }
-              : undefined
-          }
+          className={`${isEditing ? `rounded border bg-slate-700 p-2 lg:w-full ${isOwnerInvalid ? "border-red-500" : "border-blue-500"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
           type="text"
           value={
             !isEditing
@@ -124,15 +114,15 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
 
       {!isEditing ? (
         <p
-          className={`min-w-0 rounded-xl bg-slate-800 p-4 font-semibold sm:p-6 ${
+          className={`rounded-xl bg-slate-800 p-4 font-semibold sm:p-6 ${
             ticket.blocked ? "text-red-400" : "text-emerald-400"
           }`}
         >
           {ticket.blocked ? "Blocked : True" : "Blocked : False"}
         </p>
       ) : (
-        <div className="grid min-w-0 grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
-          <span className="col-span-2 text-sm text-slate-300">Blocked:</span>
+        <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-4">
+          <span className="col-span-2">Blocked</span>
           <label className={inputRadioStyle}>
             <input
               required
@@ -172,15 +162,15 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
 
       {!isEditing ? (
         <p
-          className={`min-w-0 rounded-xl bg-slate-800 p-4 font-semibold sm:p-6 ${
+          className={`rounded-xl bg-slate-800 p-4 font-semibold text-nowrap sm:p-6 ${
             ticket.customerVip ? "text-amber-400" : "text-slate-300"
           }`}
         >
           {ticket.customerVip ? "VIP Customer" : "Standard Customer"}
         </p>
       ) : (
-        <div className="grid min-w-0 grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
-          <span className="col-span-2 text-sm text-slate-300">VIP:</span>
+        <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-4">
+          <span className="col-span-2">VIP</span>
           <label className={inputRadioStyle}>
             <input
               required
@@ -218,23 +208,19 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
         </div>
       )}
 
-      <p className="min-w-0 rounded-xl bg-slate-800 p-4 font-medium text-slate-300 sm:px-6 sm:py-4">
-        Remaining Hours: {}
+      <p
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium text-nowrap sm:px-6 sm:py-4`}
+      >
+        Remaining Hours
         <input
           required
           className={`${
             isEditing
-              ? `[appearance:textfield] rounded border bg-slate-700 ${isHoursInvalid ? "border-red-500" : "border-blue-500"} [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`
+              ? `rounded border bg-slate-700 p-2 lg:w-full ${isHoursInvalid ? "border-red-500" : "border-blue-500"}`
               : "border-none bg-transparent"
-          } ${isEditing ? "block w-full p-2" : "inline-block max-w-full p-0 align-baseline"} min-w-0 outline-none`}
-          style={
-            !isEditing
-              ? { width: `${String(ticket.remainingHours).length + 2}ch` }
-              : undefined
-          }
+          } min-w-0 outline-none`}
           type="text"
           placeholder="Max 200 hours"
-          onWheel={(e) => e.currentTarget.blur()}
           value={
             !isEditing ? ticket.remainingHours : updatedTicket.remainingHours
           }
@@ -249,12 +235,12 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
       </p>
 
       {!isEditing ? (
-        <p className="min-w-0 rounded-xl bg-slate-800 p-4 font-semibold text-blue-400 sm:p-6">
-          Status:{` ${ticket.status.toUpperCase()}`}
+        <p className="rounded-xl bg-slate-800 p-4 text-blue-400 sm:p-6">
+          Status{` ${ticket.status.toUpperCase()}`}
         </p>
       ) : (
-        <div className="grid min-w-0 grid-cols-3 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
-          <span className="col-span-3 text-sm text-slate-300">Status:</span>
+        <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
+          <span className="col-span-3">Status</span>
           {(["open", "testing", "done"] as const).map((status) => (
             <label key={status} className={inputRadioStyle}>
               <input
@@ -269,7 +255,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
                     status: status,
                   }))
                 }
-                className="sr-only place-self-center"
+                className="sr-only"
               />
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </label>
@@ -279,7 +265,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
 
       {!isEditing ? (
         <p
-          className={`min-w-0 rounded-xl bg-slate-800 p-4 font-semibold sm:p-6 ${
+          className={`rounded-xl bg-slate-800 p-4 sm:p-6 ${
             ticket.severity >= 5
               ? "text-red-400"
               : ticket.severity >= 3
@@ -287,11 +273,11 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
                 : "text-emerald-400"
           }`}
         >
-          Severity:{` ${ticket.severity}`}
+          Severity{` ${ticket.severity}`}
         </p>
       ) : (
-        <div className="grid min-w-0 grid-cols-5 gap-1.5 rounded-xl border border-slate-700 bg-slate-800 p-3 sm:gap-2">
-          <span className="col-span-5 text-sm text-slate-300">Severity:</span>
+        <div className="grid grid-cols-5 gap-1 rounded-xl border border-slate-700 bg-slate-800 p-3 sm:gap-2">
+          <span className="col-span-5">Severity</span>
           {([1, 2, 3, 4, 5] as const).map((severity) => (
             <label key={severity} className={inputRadioStyle}>
               <input
@@ -306,7 +292,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
                     severity: severity,
                   }))
                 }
-                className="sr-only place-self-center"
+                className="sr-only"
               />
               {severity}
             </label>

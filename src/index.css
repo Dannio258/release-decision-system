@@ -1,11 +1,20 @@
 @import "tailwindcss";
-*{
-    scrollbar-width: none;
+* {
+  scrollbar-width: none;
 }
 :root {
   font-family: Inter, sans-serif;
-  font-feature-settings: 'liga' 1, 'calt' 1; 
+  font-feature-settings:
+    "liga" 1,
+    "calt" 1;
 }
 @supports (font-variation-settings: normal) {
-  :root { font-family: InterVariable, sans-serif; }
+  :root {
+    font-family: InterVariable, sans-serif;
+  }
+}
+@theme {
+  --text-fluid-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-fluid-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-fluid-lg: clamp(1.125rem, 1rem + 0.7vw, 1.375rem);
 }

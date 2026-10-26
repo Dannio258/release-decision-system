@@ -2,11 +2,11 @@ import initialTickets, { type Ticket } from "../../data/tickets";
 import SearchBar from "../components/SearchBar";
 import Button from "../components/Button";
 import TicketCard from "../components/Ticket";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import DetailedTicketCard from "../components/DetailedTicket";
 import ReleaseAnalysis from "../components/ReleaseAnalysis";
 import AddTicketForm from "../components/AddTicketForm";
-import DeleteConfirmation from "../components/DeleteComfirmation";
+import DeleteConfirmation from "../components/DeleteConfirmation";
 import ErrorNotification from "../components/ErrorNotification";
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [addForm, setAddForm] = useState(false);
   const [ticketToDelete, setTicketToDelete] = useState<number | null>(null);
+  const detailedTicketRef = useRef<HTMLDivElement>(null);
   const [initialData] = useState<{
     tickets: Ticket[];
     error: string | null;
@@ -59,6 +60,25 @@ function App() {
     localStorage.setItem("tickets", JSON.stringify(tickets));
   }, [tickets]);
 
+  useEffect(() => {
+    if (selectedTicketId !== null && window.innerWidth < 1024) {
+      detailedTicketRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [selectedTicketId]);
+
+  useEffect(() => {
+    if (!addForm) return;
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [addForm]);
+
   const handleAddTicket = (newTicket: Ticket) => {
     setTickets((prevTickets) => [...prevTickets, newTicket]);
   };
@@ -76,7 +96,7 @@ function App() {
     setErrorMessage(null);
   }, []);
   return (
-    <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-2 xl:grid-cols-[550px_1fr]">
+    <div className="grid min-h-dvh w-full gap-5 bg-slate-950 p-5 text-slate-100 lg:grid-cols-[25rem_1fr] 2xl:grid-cols-[45rem_1fr]">
       {errorMessage && (
         <ErrorNotification message={errorMessage} onClose={handleCloseError} />
       )}
@@ -90,7 +110,7 @@ function App() {
           }}
         />
       )}
-      <div className="flex min-h-0 flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
+      <div className="flex h-[calc(100dvh-2.5rem)] flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
         <SearchBar
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -132,7 +152,10 @@ function App() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6">
+      <div
+        ref={detailedTicketRef}
+        className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg lg:p-6"
+      >
         <div>
           {selectedTicket ? (
             <DetailedTicketCard

@@ -112,7 +112,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
       <form
         onChange={handleFormChange}
         onSubmit={handleSubmit}
-        className="relative z-99 flex max-h-[90dvh] w-full max-w-lg flex-col gap-3 overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 p-6 text-slate-100 shadow-2xl sm:p-8"
+        className="relative z-99 flex max-h-[90dvh] w-full max-w-lg flex-col gap-3 overflow-y-auto overscroll-contain rounded-2xl border border-slate-700 bg-slate-900 p-6 text-slate-100 shadow-2xl sm:p-8"
       >
         <button
           type="button"
@@ -203,8 +203,7 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
           name="remainingHours"
           type="text"
           placeholder="Max 200 hours"
-          onWheel={(e) => e.currentTarget.blur()}
-          className={`${(touchedFields.has("remainingHours") || submitAttempted) && formErrors.remainingHours ? "border-red-500" : `border-slate-700`} [appearance:textfield] rounded-xl border bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/20 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+          className={`${(touchedFields.has("remainingHours") || submitAttempted) && formErrors.remainingHours ? "border-red-500" : `border-slate-700`} rounded-xl border bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/20`}
         />
 
         <div className="mt-3 grid grid-cols-2 gap-4">
