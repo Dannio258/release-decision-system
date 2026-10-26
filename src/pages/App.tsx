@@ -70,14 +70,14 @@ function App() {
   }, [selectedTicketId]);
 
   useEffect(() => {
-    if (!addForm) return;
+    if (!addForm && ticketToDelete === null) return;
 
     document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [addForm]);
+  }, [addForm,ticketToDelete]);
 
   const handleAddTicket = (newTicket: Ticket) => {
     setTickets((prevTickets) => [...prevTickets, newTicket]);
