@@ -15,7 +15,6 @@ type AddTicketFormProps = {
 type EditableTicket = Omit<Ticket, "remainingHours"> & {
   remainingHours: string;
 };
-
 function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
   const [formErrors, setFormErrors] = useState({
     title: false,
@@ -28,13 +27,11 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
   });
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
   const [submitAttempted, setSubmitAttempted] = useState(false);
-
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   const inputRadioStyle =
-    "cursor-pointer rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-blue-500/50 has-checked:border-blue-500 has-checked:bg-blue-500/10 has-checked:text-blue-400 flex-1";
-
+    "cursor-pointer rounded-xl border border-outline-strong bg-canvas px-4 py-3 text-center text-sm font-medium text-secondary-strong transition hover:bg-surface-hover hover:border-accent/60 has-checked:border-accent has-checked:bg-accent/30 has-checked:text-accent-text flex-1";
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -49,7 +46,6 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     }
 
     const data = Object.fromEntries(formData.entries());
-
     const title = capitalize(data.title.toString());
     const status = data.status.toString() as TicketStatus;
     const severity = Number(data.severity) as Severity;
@@ -57,7 +53,6 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     const customerVip = data.customerVip === "true";
     const blocked = data.blocked === "true";
     const owner = capitalize(data.owner.toString().trim()) || null;
-
     const newTicket: EditableTicket = {
       id: newId,
       title: title,
@@ -71,7 +66,6 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
 
     onAddTicket({ ...newTicket, remainingHours: Number(remainingHours) });
   };
-
   const validateForm = (formData: FormData) => {
     const isTitleInvalid = !titleRegex.test(
       String(formData.get("title") ?? ""),
@@ -81,13 +75,11 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
 
     const owner = String(formData.get("owner") ?? "").trim();
     const isOwnerInvalid = owner !== "" && !ownerRegex.test(owner);
-
     const isHoursInvalid = !hoursRegex.test(
       String(formData.get("remainingHours")),
     );
     const isCustomerVipInvalid = formData.get("customerVip") === null;
     const isBlockedInvalid = formData.get("blocked") === null;
-
     const errors = {
       title: isTitleInvalid,
       severity: isSeverityInvalid,
@@ -99,48 +91,49 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     };
     return errors;
   };
-
   const handleFormChange = (e: React.ChangeEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const fieldName = e.target.name;
     setFormErrors(validateForm(formData));
     setTouchedFields((prev) => new Set(prev).add(fieldName));
   };
-
   return (
-    <div className="fixed inset-0 z-98 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+    <div className="bg-overlay/70 fixed inset-0 z-98 flex items-center justify-center p-4 backdrop-blur-sm">
       <form
         onChange={handleFormChange}
         onSubmit={handleSubmit}
-        className="relative z-99 flex max-h-[90dvh] w-full max-w-lg flex-col gap-3 overflow-y-auto overscroll-contain rounded-2xl border border-slate-700 bg-slate-900 p-6 text-slate-100 shadow-2xl sm:p-8"
+        className="border-outline bg-panel  relative z-99 flex max-h-[90dvh] w-full max-w-lg flex-col gap-3 overflow-y-auto overscroll-contain rounded-2xl border p-6 shadow-2xl sm:p-8"
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 cursor-pointer rounded-lg p-2 text-2xl text-slate-400 transition hover:bg-slate-800 hover:text-white"
+          className="text-secondary hover:bg-elevated absolute top-4 right-4 cursor-pointer rounded-lg p-2 text-2xl transition"
           aria-label="Close form"
         >
           ✕
         </button>
-        <h2 className="mb-3 border-b border-slate-700 pb-4 text-2xl font-bold tracking-tight text-white">
+        <h2 className="border-outline  mb-3 border-b pb-4 text-2xl font-bold tracking-tight">
           Add New Ticket
         </h2>
-
-        <label htmlFor="title" className="text-sm font-medium text-slate-300">
+        <label
+          htmlFor="title"
+          className="text-secondary-strong text-sm font-medium"
+        >
           Title
         </label>
         <input
           id="title"
           name="title"
           type="text"
-          className={`${(touchedFields.has("title") || submitAttempted) && formErrors.title ? "border-red-500" : `border-slate-700`} rounded-xl border bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`}
+          className={`${(touchedFields.has("title") || submitAttempted) && formErrors.title ? "border-danger" : `border-outline-strong`} bg-canvas placeholder:text-muted focus:border-accent focus:ring-accent/20 rounded-xl border px-4 py-3 transition outline-none focus:ring-2`}
         />
-
-        <p className="mt-2 text-sm font-medium text-slate-300">Severity</p>
+        <p className="text-secondary-strong mt-2 text-sm font-medium">
+          Severity
+        </p>
         <div
           className={`flex items-center gap-2 rounded-xl border ${
             submitAttempted && formErrors.severity
-              ? "border-red-500"
+              ? "border-danger"
               : "border-transparent"
           }`}
         >
@@ -156,12 +149,11 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
             </label>
           ))}
         </div>
-
-        <p className="mt-2 text-sm font-medium text-slate-300">Status</p>
+        <p className="text-secondary-strong mt-2 text-sm font-medium">Status</p>
         <div
           className={`grid grid-cols-3 gap-2 rounded-xl border ${
             submitAttempted && formErrors.status
-              ? "border-red-500"
+              ? "border-danger"
               : "border-transparent"
           }`}
         >
@@ -177,10 +169,9 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
             </label>
           ))}
         </div>
-
         <label
           htmlFor="owner"
-          className="mt-2 text-sm font-medium text-slate-300"
+          className="text-secondary-strong mt-2 text-sm font-medium"
         >
           Owner
         </label>
@@ -188,13 +179,12 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
           id="owner"
           name="owner"
           type="text"
-          className={`${touchedFields.has("owner") && formErrors.owner ? "border-red-500" : `border-slate-700`} rounded-xl border bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/20`}
+          className={`${touchedFields.has("owner") && formErrors.owner ? "border-danger" : `border-outline-strong`} bg-canvas  placeholder:text-muted focus:ring-accent/20 rounded-xl border px-4 py-3 transition outline-none focus:ring-2`}
           placeholder="May be empty"
         />
-
         <label
           htmlFor="remainingHours"
-          className="mt-2 text-sm font-medium text-slate-300"
+          className="text-secondary-strong mt-2 text-sm font-medium"
         >
           Remaining Hours
         </label>
@@ -203,18 +193,17 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
           name="remainingHours"
           type="text"
           placeholder="Max 200 hours"
-          className={`${(touchedFields.has("remainingHours") || submitAttempted) && formErrors.remainingHours ? "border-red-500" : `border-slate-700`} rounded-xl border bg-slate-950 px-4 py-3 text-slate-100 transition outline-none placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500/20`}
+          className={`${(touchedFields.has("remainingHours") || submitAttempted) && formErrors.remainingHours ? "border-danger" : `border-outline-strong`} bg-canvas  placeholder:text-muted focus:ring-accent/20 rounded-xl border px-4 py-3 transition outline-none focus:ring-2`}
         />
-
         <div className="mt-3 grid grid-cols-2 gap-4">
           <div
-            className={`rounded-xl border bg-slate-950 p-4 ${
+            className={`bg-canvas rounded-xl border p-4 ${
               submitAttempted && formErrors.customerVip
-                ? "border-red-500"
-                : "border-slate-700"
+                ? "border-danger"
+                : "border-outline-strong"
             }`}
           >
-            <span className="mb-3 block text-center text-sm font-medium text-slate-300">
+            <span className="text-secondary-strong mb-3 block text-center text-sm font-medium">
               VIP Customer
             </span>
             <div className="flex gap-2">
@@ -238,15 +227,14 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
               </label>
             </div>
           </div>
-
           <div
-            className={`rounded-xl border bg-slate-950 p-4 ${
+            className={`bg-canvas rounded-xl border p-4 ${
               submitAttempted && formErrors.blocked
-                ? "border-red-500"
-                : "border-slate-700"
+                ? "border-danger"
+                : "border-outline-strong"
             }`}
           >
-            <span className="mb-3 block text-center text-sm font-medium text-slate-300">
+            <span className="text-secondary-strong mb-3 block text-center text-sm font-medium">
               Blocked
             </span>
             <div className="flex gap-2">
@@ -276,5 +264,4 @@ function AddTicketForm({ onClose, onAddTicket, newId }: AddTicketFormProps) {
     </div>
   );
 }
-
 export default AddTicketForm;

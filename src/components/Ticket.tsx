@@ -6,23 +6,22 @@ type TicketProps = {
   onClick: () => void;
   onDelete: () => void;
 };
-
 function TicketCard({ ticket, onClick, onDelete }: TicketProps) {
   return (
     <div
       onClick={onClick}
-      className="flex cursor-pointer rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-left transition hover:not-has-[button:hover]:border-slate-600 hover:not-has-[button:hover]:bg-slate-700"
+      className="flex cursor-pointer rounded-xl border border-outline bg-elevated px-4 py-3 text-left transition hover:not-has-[button:hover]:border-outline-strong hover:not-has-[button:hover]:bg-surface-hover"
     >
       <div>
-        <h2 className="font-semibold text-slate-100">Title: {ticket.title}</h2>
-        <p className="mt-1 text-sm text-slate-400">ID: {ticket.id}</p>
+        <h2 className="font-bold">Title: {ticket.title}</h2>
+        <p className="mt-1 text-sm text-secondary">ID: {ticket.id}</p>
       </div>
       <button
         onClick={(e) => {
           e.stopPropagation();
           onDelete();
         }}
-        className="ml-auto cursor-pointer rounded-xl bg-red-600 px-3 text-xs opacity-70 hover:bg-red-700"
+        className="ml-auto cursor-pointer rounded-xl bg-danger-solid px-3 text-xs opacity-70 hover:bg-danger-hover"
       >
         <DeleteBin />
       </button>

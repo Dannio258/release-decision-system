@@ -1,35 +1,21 @@
 function DeleteBin() {
   return (
     <svg
-      width="20px"
-      height="20px"
-      viewBox="-1.9 -1.9 22.80 22.80"
-      version="1.1"
       xmlns="http://www.w3.org/2000/svg"
-      fill="#000000"
-      stroke="#000000"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-      <g
-        id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      ></g>
-      <g id="SVGRepo_iconCarrier">
-        {" "}
-        <title>icon/18/icon-delete</title> <desc>Created with Sketch.</desc>{" "}
-        <defs> </defs>{" "}
-        <g id="out" stroke-width="0.00019" fill="none" fill-rule="evenodd">
-          {" "}
-          <path
-            d="M4.91666667,14.8888889 C4.91666667,15.3571429 5.60416667,16 6.0625,16 L12.9375,16 C13.3958333,16 14.0833333,15.3571429 14.0833333,14.8888889 L14.0833333,6 L4.91666667,6 L4.91666667,14.8888889 L4.91666667,14.8888889 L4.91666667,14.8888889 Z M15,3.46500003 L12.5555556,3.46500003 L11.3333333,2 L7.66666667,2 L6.44444444,3.46500003 L4,3.46500003 L4,4.93000007 L15,4.93000007 L15,3.46500003 L15,3.46500003 L15,3.46500003 Z"
-            id="path"
-            fill="#ffffff"
-          >
-            {" "}
-          </path>{" "}
-        </g>{" "}
-      </g>
+      <path d="M3.5 6.5h17" />
+      <path d="M9 6.5V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5v2" />
+      <path d="M5.5 6.5l.85 12.75A2 2 0 0 0 8.35 21h7.3a2 2 0 0 0 2-1.75L18.5 6.5" />
+      <path d="M10 10.5v6.5M14 10.5v6.5" />
     </svg>
   );
 }

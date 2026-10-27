@@ -2,19 +2,52 @@
 * {
   scrollbar-width: none;
 }
-:root {
-  font-family: Inter, sans-serif;
-  font-feature-settings:
-    "liga" 1,
-    "calt" 1;
-}
-@supports (font-variation-settings: normal) {
-  :root {
-    font-family: InterVariable, sans-serif;
-  }
-}
 @theme {
   --text-fluid-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
   --text-fluid-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
   --text-fluid-lg: clamp(1.125rem, 1rem + 0.7vw, 1.375rem);
+
+  --font-primary: "JetBrains Mono Variable", monospace;
+
+  --color-canvas: var(--color-slate-950);
+  --color-panel: #212231;
+  --color-elevated: #2c2d41;
+  --color-surface-hover: #003262;
+
+  /* Borders */
+  --color-outline: var(--color-slate-600);
+  --color-outline-subtle: var(--color-slate-500);
+  --color-outline-strong: #5d639b;
+
+  /* Text and overlays */
+  --color-text-white: var(--color-white);
+  --color-secondary: var(--color-slate-400);
+  --color-secondary-strong: var(--color-slate-300);
+  --color-muted: var(--color-slate-400);
+  --color-overlay: var(--color-black);
+
+  /* Primary actions and interaction states */
+  --color-action: #004da0;
+  --color-action-hover: #22396F;
+  --color-accent: #162E93;
+  --color-accent-text: #91afff;
+
+  /* Errors / destructive actions */
+  --color-danger: var(--color-red-500);
+  --color-danger-solid: #a30015;
+  --color-danger-hover: #880012;
+  --color-danger-deep: #740A03;
+  --color-danger-text: #ff7185;
+  --color-danger-text-soft: var(--color-red-200);
+
+  /* Semantic statuses */
+  --color-warning: #d65200;
+  --color-warning-text: #DD8740;
+  --color-unassigned: #6FAE90;
+  --color-unassigned-text: #8DAE6F;
+  --color-success: #8BCB52;
+  --color-success-text: #ACD846;
+
+  /* Existing edit button color */
+  --color-edit: #ff7900;
 }

@@ -14,7 +14,6 @@ type TicketProps = {
 type EditableTicket = Omit<Ticket, "remainingHours"> & {
   remainingHours: string;
 };
-
 function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTicket, setUpdatedTicket] = useState<EditableTicket>({
@@ -25,20 +24,17 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
 
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-
   const inputRadioStyle =
-    "flex cursor-pointer items-center justify-center rounded-xl border border-slate-600 bg-slate-800 px-2 py-3  text-slate-300 transition-all duration-200 hover:border-blue-500/60 hover:bg-slate-700 has-checked:border-blue-500 has-checked:bg-blue-500/15 has-checked:text-blue-400 has-checked:shadow-[0_0_0_1px_rgba(59,130,246,0.15)] min-w-0 flex-1 xl:px-5";
+    "flex cursor-pointer items-center justify-center rounded-xl border border-outline-strong bg-elevated px-2 py-3 text-secondary-strong transition-all duration-200 hover:border-accent/60 hover:bg-surface-hover has-checked:border-accent has-checked:bg-accent/30 has-checked:text-accent-text min-w-0 flex-1 xl:px-5";
 
   const isTitleInvalid = !titleRegex.test(updatedTicket.title);
 
   const owner = updatedTicket.owner?.trim() ?? "";
-
   const isOwnerInvalid = owner !== "" && !ownerRegex.test(owner);
 
   const isHoursInvalid = !hoursRegex.test(updatedTicket.remainingHours);
 
   const invalidSave = isTitleInvalid || isOwnerInvalid || isHoursInvalid;
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,23 +52,21 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isEditing]);
-
   return (
     <div
       ref={editModeRef}
-      className="text-fluid-sm grid w-full grid-cols-1 gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg sm:grid-cols-2 sm:gap-4 sm:p-6 lg:p-8"
+      className="text-fluid-sm border-outline-subtle bg-panel grid w-full grid-cols-1 gap-3 rounded-2xl border p-3 shadow-lg sm:grid-cols-2 sm:gap-4 sm:p-6 lg:p-8"
     >
-      <p className="flex items-center rounded-xl bg-slate-800 p-4 font-medium sm:p-6">
+      <p className="bg-elevated flex items-center rounded-xl p-4 font-medium sm:p-6">
         ID: {ticket.id}
       </p>
-
       <p
-        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium sm:px-6 sm:py-4`}
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} bg-elevated gap-2 rounded-xl p-4 font-medium sm:px-6 sm:py-4`}
       >
         Title
         <input
           required
-          className={`${isEditing ? `rounded border bg-slate-700 p-2 lg:w-full ${isTitleInvalid ? "border-red-500" : "border-blue-500"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
+          className={`${isEditing ? `bg-accent/30 rounded border p-2 lg:w-full ${isTitleInvalid ? "border-danger" : "border-outline-strong"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
           type="text"
           value={
             !isEditing
@@ -88,13 +82,12 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           readOnly={!isEditing}
         />
       </p>
-
       <p
-        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium sm:px-6 sm:py-4`}
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} bg-elevated gap-2 rounded-xl p-4 font-medium sm:px-6 sm:py-4`}
       >
         Owner
         <input
-          className={`${isEditing ? `rounded border bg-slate-700 p-2 lg:w-full ${isOwnerInvalid ? "border-red-500" : "border-blue-500"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
+          className={`${isEditing ? `bg-accent/30 rounded border p-2 lg:w-full ${isOwnerInvalid ? "border-danger" : "border-outline-strong"}` : "border-none bg-transparent p-0"} min-w-0 outline-none`}
           type="text"
           value={
             !isEditing
@@ -111,17 +104,16 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           readOnly={!isEditing}
         />
       </p>
-
       {!isEditing ? (
         <p
-          className={`rounded-xl bg-slate-800 p-4 font-semibold sm:p-6 ${
-            ticket.blocked ? "text-red-400" : "text-emerald-400"
+          className={`bg-elevated rounded-xl p-4 font-semibold sm:p-6 ${
+            ticket.blocked ? "text-danger-text" : "text-success-text"
           }`}
         >
           {ticket.blocked ? "Blocked : True" : "Blocked : False"}
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-4">
+        <div className="border-outline bg-elevated grid grid-cols-2 gap-2 rounded-xl border p-4">
           <span className="col-span-2">Blocked</span>
           <label className={inputRadioStyle}>
             <input
@@ -159,17 +151,16 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           </label>
         </div>
       )}
-
       {!isEditing ? (
         <p
-          className={`rounded-xl bg-slate-800 p-4 font-semibold text-nowrap sm:p-6 ${
-            ticket.customerVip ? "text-amber-400" : "text-slate-300"
+          className={`bg-elevated rounded-xl p-4 font-semibold text-nowrap sm:p-6 ${
+            ticket.customerVip ? "text-warning-text" : "text-secondary-strong"
           }`}
         >
           {ticket.customerVip ? "VIP Customer" : "Standard Customer"}
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-4">
+        <div className="border-outline bg-elevated grid grid-cols-2 gap-2 rounded-xl border p-4">
           <span className="col-span-2">VIP</span>
           <label className={inputRadioStyle}>
             <input
@@ -207,16 +198,15 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           </label>
         </div>
       )}
-
       <p
-        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} gap-2 rounded-xl bg-slate-800 p-4 font-medium text-nowrap sm:px-6 sm:py-4`}
+        className={`${!isEditing ? `flex items-center` : `grid grid-cols-1`} bg-elevated gap-2 rounded-xl p-4 font-medium text-nowrap sm:px-6 sm:py-4`}
       >
         Remaining Hours
         <input
           required
           className={`${
             isEditing
-              ? `rounded border bg-slate-700 p-2 lg:w-full ${isHoursInvalid ? "border-red-500" : "border-blue-500"}`
+              ? `bg-accent/30 rounded border p-2 lg:w-full ${isHoursInvalid ? "border-danger" : "border-outline-strong"}`
               : "border-none bg-transparent"
           } min-w-0 outline-none`}
           type="text"
@@ -233,13 +223,12 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           readOnly={!isEditing}
         />
       </p>
-
       {!isEditing ? (
-        <p className="rounded-xl bg-slate-800 p-4 text-blue-400 sm:p-6">
+        <p className="bg-elevated text-accent-text rounded-xl p-4 sm:p-6">
           Status{` ${ticket.status.toUpperCase()}`}
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-2 rounded-xl border border-slate-700 bg-slate-800 p-3">
+        <div className="border-outline bg-elevated grid grid-cols-3 gap-2 rounded-xl border p-3">
           <span className="col-span-3">Status</span>
           {(["open", "testing", "done"] as const).map((status) => (
             <label key={status} className={inputRadioStyle}>
@@ -262,21 +251,20 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           ))}
         </div>
       )}
-
       {!isEditing ? (
         <p
-          className={`rounded-xl bg-slate-800 p-4 sm:p-6 ${
+          className={`bg-elevated rounded-xl p-4 sm:p-6 ${
             ticket.severity >= 5
-              ? "text-red-400"
+              ? "text-danger-text"
               : ticket.severity >= 3
-                ? "text-amber-400"
-                : "text-emerald-400"
+                ? "text-warning-text"
+                : "text-success-text"
           }`}
         >
           Severity{` ${ticket.severity}`}
         </p>
       ) : (
-        <div className="grid grid-cols-5 gap-1 rounded-xl border border-slate-700 bg-slate-800 p-3 sm:gap-2">
+        <div className="border-outline bg-elevated grid grid-cols-5 gap-1 rounded-xl border p-3 sm:gap-2">
           <span className="col-span-5">Severity</span>
           {([1, 2, 3, 4, 5] as const).map((severity) => (
             <label key={severity} className={inputRadioStyle}>
@@ -299,14 +287,13 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
           ))}
         </div>
       )}
-
       {isEditing ? (
         <>
           <button
             onClick={() => {
               setIsEditing(false);
             }}
-            className="col-span-full w-full cursor-pointer rounded-xl border border-red-500/30 bg-red-500/10 p-4 font-semibold text-red-400 transition-all duration-200 hover:border-red-500/60 hover:bg-red-500/20 hover:text-red-300 sm:col-span-1"
+            className="border-danger/30 bg-danger/10 text-danger-text hover:border-danger/60 hover:bg-danger/20 hover:text-danger-text-hover col-span-full w-full cursor-pointer rounded-xl border p-4 font-semibold transition-all duration-200 sm:col-span-1"
           >
             Cancel
           </button>
@@ -322,7 +309,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
                 setIsEditing(false);
               }
             }}
-            className={`col-span-full w-full cursor-pointer sm:col-span-1 ${invalidSave && `pointer-events-none opacity-30`} rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 font-semibold text-emerald-400 transition-all duration-200 hover:border-emerald-500/60 hover:bg-emerald-500/20 hover:text-emerald-300`}
+            className={`col-span-full w-full cursor-pointer sm:col-span-1 ${invalidSave && `pointer-events-none opacity-30`} border-success/30 bg-success/10 text-success-text hover:border-success/60 hover:bg-success/20 hover:text-success-text-hover rounded-xl border p-4 font-semibold transition-all duration-200`}
           >
             Save edit
           </button>
@@ -331,7 +318,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
         <>
           <button
             onClick={onDelete}
-            className="col-span-full w-full cursor-pointer rounded-xl bg-red-600 p-4 opacity-70 hover:bg-red-700 sm:col-span-1"
+            className="bg-danger-solid hover:bg-danger-hover col-span-full w-full cursor-pointer rounded-xl p-4 opacity-70 sm:col-span-1"
           >
             Delete Ticket
           </button>
@@ -345,7 +332,7 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
                 });
               }
             }}
-            className="col-span-full w-full cursor-pointer rounded-xl bg-yellow-600 p-4 opacity-70 hover:bg-amber-500 sm:col-span-1"
+            className="bg-edit hover:bg-warning text-overlay col-span-full w-full cursor-pointer rounded-xl p-4 opacity-70 sm:col-span-1"
           >
             Edit
           </button>
@@ -354,5 +341,4 @@ function DetailedTicketCard({ ticket, onDelete, onEdit }: TicketProps) {
     </div>
   );
 }
-
 export default DetailedTicketCard;
